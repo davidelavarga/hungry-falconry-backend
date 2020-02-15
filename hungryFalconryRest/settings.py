@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -25,8 +24,7 @@ SECRET_KEY = 'k&ax07y1zr#f(1iaq%1sj)pmdchk*0m*(x#f7vy@b7!-u54-yn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -71,17 +69,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'hungryFalconryRest.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'mysecretpassword',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
+DATETIME_INPUT_FORMATS = [
+            '%Y-%m-%d %H:%M:%S',  # '2006-10-25 14:30:59'
+            '%Y-%m-%d %H:%M:%S.%f',  # '2006-10-25 14:30:59.000200'
+            '%Y-%m-%d %H:%M',  # '2006-10-25 14:30'
+            '%Y-%m-%d',  # '2006-10-25'
+            '%m/%d/%Y %H:%M:%S',  # '10/25/2006 14:30:59'
+            '%m/%d/%Y %H:%M:%S.%f',  # '10/25/2006 14:30:59.000200'
+            '%m/%d/%Y %H:%M',  # '10/25/2006 14:30'
+            '%m/%d/%Y',  # '10/25/2006'
+            '%m/%d/%y %H:%M:%S',  # '10/25/06 14:30:59'
+            '%m/%d/%y %H:%M:%S.%f',  # '10/25/06 14:30:59.000200'
+            '%m/%d/%y %H:%M',  # '10/25/06 14:30'
+            '%m/%d/%y',  # '10/25/06'
+        ]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -101,7 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -114,7 +128,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
