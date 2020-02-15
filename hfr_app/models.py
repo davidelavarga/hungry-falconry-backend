@@ -1,4 +1,5 @@
 import re
+import uuid
 
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -41,7 +42,8 @@ class Feeder(models.Model):
     current_portions = models.IntegerField(null=False, blank=True, editable=True, auto_created=True, default=0)
     created_at = models.DateTimeField(auto_now=timezone.now)
     owner = models.ForeignKey("auth.User", related_name='feeders', on_delete=models.CASCADE, null=False, blank=False)
-    slug_feeder = models.SlugField(max_length=20, unique=True, auto_created=True)
+    slug_feeder = models.SlugField(unique=True, auto_created=True, default=uuid.uuid4().hex, editable=False)
+    number_of_services = models.IntegerField(null=False, blank=True, editable=False, default=0)
 
     def __str__(self):
         return self.mac_address
@@ -51,7 +53,7 @@ class Schedule(models.Model):
     timestamp = models.DateTimeField(primary_key=True)
     feeder = models.ForeignKey('Feeder', on_delete=models.CASCADE, null=False, blank=False)
     done = models.BooleanField(default=False)
-    slug_scheduler = models.SlugField(max_length=20, unique=True, auto_created=True)
+    slug_scheduler = models.SlugField(unique=True, auto_created=True, default=uuid.uuid4().hex, editable=False)
 
     def __str__(self):
         return self.timestamp
