@@ -75,12 +75,8 @@ WSGI_APPLICATION = 'hungryFalconryRest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'mysecretpassword',
-        'HOST': 'db',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
 
