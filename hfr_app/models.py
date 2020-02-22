@@ -43,7 +43,6 @@ class Feeder(models.Model):
     created_at = models.DateTimeField(auto_now=timezone.now)
     owner = models.ForeignKey("auth.User", related_name='feeders', on_delete=models.CASCADE, null=False, blank=False)
     slug_feeder = models.SlugField(unique=True, auto_created=True, default=uuid.uuid4().hex, editable=False)
-    number_of_services = models.IntegerField(null=False, blank=True, editable=False, default=0)
 
     def __str__(self):
         return self.mac_address
