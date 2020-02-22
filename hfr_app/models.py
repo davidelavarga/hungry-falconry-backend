@@ -1,13 +1,24 @@
 import re
 import uuid
 
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.forms import fields
 from django.db import models
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 MAC_RE = r'^([0-9a-fA-F]{2}([:-]?|$)){6}$'
 mac_re = re.compile(MAC_RE)
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
 
 
 class MACAddressFormField(fields.RegexField):
