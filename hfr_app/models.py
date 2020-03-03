@@ -47,7 +47,7 @@ class MACAddressField(models.Field):
 
 
 class Feeder(models.Model):
-    mac_address = MACAddressField(unique=True, null=False, blank=False, editable=False)
+    mac_address = MACAddressField(unique=True, null=False, blank=False)
     name_by_user = models.CharField(max_length=20, null=False, blank=False, unique=False, default="Feeder")
     max_portions = models.IntegerField(null=False, blank=False, editable=True, auto_created=True)
     current_portions = models.IntegerField(null=False, blank=True, editable=True, auto_created=True, default=0)
