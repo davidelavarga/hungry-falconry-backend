@@ -6,7 +6,7 @@ from hfr_app.models import Feeder, Schedule
 
 
 class ScheduleSerializer(ModelSerializer):
-    slug_scheduler = serializers.ReadOnlyField(source='slug_scheduler')
+    slug_scheduler = serializers.ReadOnlyField()
 
     class Meta:
         model = Schedule

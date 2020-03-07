@@ -32,6 +32,6 @@ urlpatterns = [
     url(r'^api-token-auth/', rest_views.obtain_auth_token),
     path('feeders/', views.FeederList.as_view()),
     path('feeders/<int:pk>/', views.FeederDetail.as_view()),
-    path('schedules/', views.FeederList.as_view()),
-    path('schedules/<slug_scheduler>/', views.FeederDetail.as_view()),
+    path('schedules/', views.ScheduleList.as_view()),
+    path('schedules/<slug_scheduler>/', views.ScheduleDetail.as_view()),
 ]

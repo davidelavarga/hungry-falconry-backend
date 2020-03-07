@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 
 from hfr_app.models import Feeder, Schedule
-from hfr_app.serializers import UserSerializer, FeederSerializer
+from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -41,7 +41,7 @@ class FeederDetail(RetrieveUpdateDestroyAPIView):
 
 class ScheduleList(ListCreateAPIView):
     queryset = Schedule.objects.all()
-    serializer_class = FeederSerializer
+    serializer_class = ScheduleSerializer
 
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
@@ -49,7 +49,7 @@ class ScheduleDetail(RetrieveUpdateDestroyAPIView):
         Retrieve, update or delete a snippet instance.
     """
     queryset = Schedule.objects.all()
-    serializer_class = FeederSerializer
+    serializer_class = ScheduleSerializer
     lookup_field = 'slug_scheduler'
 
 
