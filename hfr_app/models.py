@@ -66,4 +66,4 @@ class Schedule(models.Model):
     slug_scheduler = models.SlugField(unique=True, auto_created=True, default=uuid.uuid4().hex, editable=False)
 
     def __str__(self):
-        return self.timestamp
+        return str(self.timestamp)

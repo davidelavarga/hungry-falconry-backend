@@ -29,5 +29,9 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('hello/', views.HelloView.as_view(), name='hello'),
-    url(r'^api-token-auth/', rest_views.obtain_auth_token)
+    url(r'^api-token-auth/', rest_views.obtain_auth_token),
+    path('feeders/', views.FeederList.as_view()),
+    path('feeders/<int:pk>/', views.FeederDetail.as_view()),
+    path('schedules/', views.FeederList.as_view()),
+    path('schedules/<slug_scheduler>/', views.FeederDetail.as_view()),
 ]
