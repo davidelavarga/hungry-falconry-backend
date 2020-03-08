@@ -18,7 +18,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class HelloView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     @staticmethod
     def get(request):
@@ -27,29 +27,31 @@ class HelloView(APIView):
 
 
 class FeederList(ListCreateAPIView):
-    queryset = Feeder.objects.all()
+    permission_classes = [IsAuthenticated]
     serializer_class = FeederSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Feeder.objects.all()
+        return Feeder.objects.filter(owner=self.request.user)
 
 
 class FeederDetail(RetrieveUpdateDestroyAPIView):
-    """
-        Retrieve, update or delete a snippet instance.
-    """
-    queryset = Feeder.objects.all()
     serializer_class = FeederSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Feeder.objects.all()
+        return Feeder.objects.filter(owner=self.request.user)
 
 
 class ScheduleList(ListCreateAPIView):
-    queryset = Schedule.objects.all()
+    permission_classes = [IsAuthenticated, ]
     serializer_class = ScheduleSerializer
 
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
-    """
-        Retrieve, update or delete a snippet instance.
-    """
+    permission_classes = [IsAuthenticated, ]
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
     lookup_field = 'slug_scheduler'
-
-

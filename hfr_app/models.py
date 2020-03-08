@@ -61,7 +61,7 @@ class Feeder(models.Model):
 
 class Schedule(models.Model):
     timestamp = models.DateTimeField(primary_key=True)
-    feeder = models.ForeignKey('Feeder', on_delete=models.CASCADE, null=False, blank=False)
+    feeder = models.ForeignKey('Feeder', related_name='schedules', on_delete=models.CASCADE, null=False, blank=False)
     done = models.BooleanField(default=False)
     slug_scheduler = models.SlugField(unique=True, auto_created=True, default=uuid.uuid4().hex, editable=False)
 
