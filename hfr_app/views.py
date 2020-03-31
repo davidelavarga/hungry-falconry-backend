@@ -49,9 +49,24 @@ class ScheduleList(ListCreateAPIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = ScheduleSerializer
 
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        feeder = self.kwargs['pk']
+        return Schedule.objects.filter(feeder=feeder)
+
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, ]
-    queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
     lookup_field = 'slug_scheduler'
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        feeder = self.kwargs['pk']
+        return Schedule.objects.filter(feeder=feeder)
