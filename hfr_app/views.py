@@ -61,7 +61,6 @@ class ScheduleList(ListCreateAPIView):
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = ScheduleSerializer
-    lookup_field = 'slug_scheduler'
 
     def get_queryset(self):
         """
