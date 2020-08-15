@@ -55,7 +55,17 @@ class ScheduleList(ListCreateAPIView):
         the user as determined by the username portion of the URL.
         """
         feeder = self.kwargs['pk']
+        if self.request.POST:
+            print(self.request.POST)
         return Schedule.objects.filter(feeder=feeder)
+
+    def post(self, request, *args, **kwargs):
+        # https: // www.agiliq.com / blog / 2019 / 05 / django - rest - framework - listcreateapiview /
+        print("Hola")
+
+    # def get_serializer_class(self):
+    #     if self.request.method == 'POST':
+    #         print(self.request.POST)
 
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
@@ -65,8 +75,6 @@ class ScheduleDetail(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
         """
         feeder = self.kwargs['pk']
         return Schedule.objects.filter(feeder=feeder)
