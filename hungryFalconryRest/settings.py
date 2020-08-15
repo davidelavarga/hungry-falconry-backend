@@ -91,7 +91,7 @@ if os.getenv('GAE_APPLICATION', None):
             'HOST': '/cloudsql/hungry-falconry:europe-west1:hf-sql',
             'USER': 'root',
             'PASSWORD': 'cf3bfea7',
-            'NAME': 'db-hf-mysql',
+            'NAME': 'hf_mysql_db',
         }
     }
 else:
@@ -108,7 +108,7 @@ else:
             'PORT': '3306',
             'USER': 'root',
             'PASSWORD': 'cf3bfea7',
-            'NAME': 'db-hf-mysql',
+            'NAME': 'hf_mysql_db',
         }
     }
     # DATABASES = {

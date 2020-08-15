@@ -53,17 +53,15 @@ class Feeder(models.Model):
     current_portions = models.IntegerField(null=False, blank=True, editable=True, auto_created=True, default=0)
     created_at = models.DateTimeField(auto_now=timezone.now)
     owner = models.ForeignKey("auth.User", related_name='feeders', on_delete=models.CASCADE, null=False, blank=False)
-    slug_feeder = models.SlugField(unique=True, auto_created=True, default=uuid.uuid4().hex, editable=False)
 
     def __str__(self):
         return self.mac_address
 
 
 class Schedule(models.Model):
-    timestamp = models.DateTimeField(primary_key=True)
+    timestamp = models.DateTimeField(null=False, blank=False)
     feeder = models.ForeignKey('Feeder', related_name='schedules', on_delete=models.CASCADE, null=False, blank=False)
     done = models.BooleanField(default=False)
-    slug_scheduler = models.SlugField(unique=True, auto_created=True, default=uuid.uuid4().hex, editable=False)
 
     def __str__(self):
         return str(self.timestamp)

@@ -1,12 +1,10 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
 
 from hfr_app.models import Feeder, Schedule
 
 
 class ScheduleSerializer(ModelSerializer):
-    slug_scheduler = serializers.ReadOnlyField()
 
     class Meta:
         model = Schedule

@@ -33,5 +33,5 @@ urlpatterns = [
     path('feeders/', views.FeederList.as_view()),
     path('feeders/<int:pk>/', views.FeederDetail.as_view()),
     path('feeders/<int:pk>/schedules/', views.ScheduleList.as_view()),
-    path('feeders/<int:pk>/schedules/<slug_scheduler>/', views.ScheduleDetail.as_view()),
+    path('feeders/<int:pk>/schedules/<int:id>/', views.ScheduleDetail.as_view()),
 ]
