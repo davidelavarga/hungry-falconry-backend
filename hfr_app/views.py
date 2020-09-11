@@ -3,11 +3,12 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, CreateAPIView
 
 from hfr_app.models import Feeder, Schedule
 from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer
 
+from config import get_settings
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -51,21 +52,23 @@ class ScheduleList(ListCreateAPIView):
 
     def get_queryset(self):
         """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
+        Return a list of schedules based on feeder id
         """
         feeder = self.kwargs['pk']
-        if self.request.POST:
-            print(self.request.POST)
         return Schedule.objects.filter(feeder=feeder)
 
     def post(self, request, *args, **kwargs):
-        # https: // www.agiliq.com / blog / 2019 / 05 / django - rest - framework - listcreateapiview /
-        print("Hola")
-
-    # def get_serializer_class(self):
-    #     if self.request.method == 'POST':
-    #         print(self.request.POST)
+        """
+        Send request to feeder device and save it
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        # TODO async???
+        schedule = self.create(request, *args, **kwargs)
+        get_settings().feeder_communication().publish_schedule_request(schedule.data, self.request.user.auth_token.key)
+        return self.create(request, *args, **kwargs)
 
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
