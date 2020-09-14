@@ -68,7 +68,7 @@ class ScheduleList(ListCreateAPIView):
         # TODO async???
         schedule = self.create(request, *args, **kwargs)
         get_settings().feeder_communication().publish_schedule_request(schedule.data, self.request.user.auth_token.key)
-        return self.create(request, *args, **kwargs)
+        return schedule
 
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
