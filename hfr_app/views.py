@@ -60,15 +60,13 @@ class ScheduleList(ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         """
         Send request to feeder device and save it
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
+        :return: Scheduled created
         """
-        # TODO async???
+        # Create schedule object and save it in database
         schedule = self.create(request, *args, **kwargs)
+        # Once the schedule is created, send it to feeder device
         get_settings().feeder_communication().publish_schedule_request(schedule.data, self.request.user.auth_token.key)
-        return self.create(request, *args, **kwargs)
+        return schedule
 
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
