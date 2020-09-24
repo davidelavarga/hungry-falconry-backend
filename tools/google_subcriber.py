@@ -3,6 +3,7 @@ from concurrent.futures import TimeoutError
 from google.cloud import pubsub_v1
 
 # developer
+# attributes.auth_key = "be9ae7c5cca79f53d05be08c90b36cd2fbd8312e"
 GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 PROJECT_ID = os.getenv("PROJECT_ID")
 SUBSCRIPTION_ID = os.getenv("SUBSCRIPTION_ID")

@@ -13,6 +13,10 @@ class GoogleSettings(Settings):
     feeder_communication = GooglePubSubAdapter
 
 
+class DefaultSettings(Settings):
+    feeder_communication = GooglePubSubAdapter
+
+
 def get_settings() -> Settings:
     cls_prefix = str.capitalize(os.environ.get("SETTINGS", "Default"))
     cls_name = f"{cls_prefix}Settings"
