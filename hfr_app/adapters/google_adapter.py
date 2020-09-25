@@ -1,7 +1,7 @@
 import os
 import json
 from hfr_app.adapters.ports import FeederCommunicationPort
-from google.cloud import pubsub_v1
+from google.cloud import pubsub_v1  # TODO Use Pub/Sub Lite instead Pub/Sub
 
 GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 PROJECT_ID = os.getenv("PROJECT_ID")
@@ -21,6 +21,7 @@ class GooglePubSubAdapter(FeederCommunicationPort):
         # TODO error handler: https://cloud.google.com/pubsub/docs/publisher#publishing_messages
         print(future.result())
         return future
+
 
 def create_topic():
     """Create a new Pub/Sub topic."""
