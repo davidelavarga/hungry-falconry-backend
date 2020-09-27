@@ -3,11 +3,12 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, CreateAPIView
 
 from hfr_app.models import Feeder, Schedule
 from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer
 
+from config import get_settings
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -51,11 +52,26 @@ class ScheduleList(ListCreateAPIView):
 
     def get_queryset(self):
         """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
+        Return a list of schedules based on feeder id
         """
         feeder = self.kwargs['pk']
         return Schedule.objects.filter(feeder=feeder)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Send request to feeder device and save it
+        :return: Scheduled created
+        """
+        try:
+            # Create schedule object and save it in database
+            schedule = self.create(request, *args, **kwargs)
+            # Once the schedule is created, send it to feeder device
+            get_settings().feeder_communication().publish_schedule_request(schedule.data, self.request.user.auth_token.key)
+            return schedule
+        except Exception as e:
+            #TODO: Removed schedule when something fails
+            print(f"Should remove schedule: {e}")
+
 
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):
@@ -65,8 +81,6 @@ class ScheduleDetail(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
         """
         feeder = self.kwargs['pk']
         return Schedule.objects.filter(feeder=feeder)
