@@ -1,11 +1,34 @@
+import os
+import json
 from hfr_app.adapters.ports import FeederCommunicationPort
-from jsonschema import validate
-from hfr_app.json_schemas import publish_schedule_schema
+from google.cloud import pubsub_v1  # TODO Use Pub/Sub Lite instead Pub/Sub
+
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+PROJECT_ID = os.getenv("PROJECT_ID")
+TOPIC_ID = os.getenv("TOPIC_ID")
 
 
 class GooglePubSubAdapter(FeederCommunicationPort):
-    def publish_schedule_request(self, schedule_data: dict, auth_token: str):
-        schedule_data["auth_token"] = auth_token
-        schedule_data["id"] = str(schedule_data["id"])
-        validate(instance=schedule_data, schema=publish_schedule_schema)
-        # Send to PubSub
+
+    def __init__(self):
+        self.publisher = pubsub_v1.PublisherClient()
+        self.topic_path = self.publisher.topic_path(PROJECT_ID, TOPIC_ID)
+
+    def publish_schedule_request(self, data: dict, auth_key: str):
+        data = json.dumps(data).encode("utf-8")
+        # auth_key will be used in order to difference the subscriber
+        future = self.publisher.publish(self.topic_path, data, auth_key=auth_key)
+        # TODO error handler: https://cloud.google.com/pubsub/docs/publisher#publishing_messages
+        print(future.result())
+        return future
+
+
+def create_topic():
+    """Create a new Pub/Sub topic."""
+
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(PROJECT_ID, TOPIC_ID)
+
+    topic = publisher.create_topic(request={"name": topic_path})
+
+    print("Topic created: {}".format(topic))
