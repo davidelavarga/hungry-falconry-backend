@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from hexagonal_settings import get_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -90,7 +91,7 @@ if os.getenv('GAE_APPLICATION', None):
             'ENGINE': 'django.db.backends.mysql',
             'HOST': '/cloudsql/hungry-falconry:europe-west1:hf-sql',
             'USER': 'root',
-            'PASSWORD': 'cf3bfea7',
+            'PASSWORD': get_settings().secret_store.get_database_password("hf_mysql_db_password"),
             'NAME': 'hf_mysql_db',
         }
     }
