@@ -20,7 +20,6 @@ class GooglePubSubAdapter(FeederCommunicationPort):
         # auth_key will be used in order to difference the subscriber
         future = self.publisher.publish(self.topic_path, data, auth_key=auth_key)
         # TODO error handler: https://cloud.google.com/pubsub/docs/publisher#publishing_messages
-        print(future.result())
         return future
 
 
@@ -47,3 +46,8 @@ class GoogleSecretManager(SecretsStorePort):
     @staticmethod
     def __build_secret_resource(secret_id, version_id="latest"):
         return f"projects/{PROJECT_ID}/secrets/{secret_id}/versions/{version_id}"
+
+
+# gsm = GoogleSecretManager()
+# print(gsm.get_database_password("hf_mysql_db_password"))
+
