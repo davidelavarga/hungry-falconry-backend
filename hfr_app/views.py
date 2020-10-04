@@ -8,7 +8,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIV
 from hfr_app.models import Feeder, Schedule
 from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer
 
-from config import get_settings
+from hexagonal_settings import get_settings
 
 class UserViewSet(viewsets.ModelViewSet):
     """

@@ -1,20 +1,23 @@
 import os
 import sys
 
-from hfr_app.adapters.google_adapter import GooglePubSubAdapter
-from hfr_app.adapters.ports import FeederCommunicationPort
+from hfr_app.adapters.google_adapter import GooglePubSubAdapter, GoogleSecretManager
+from hfr_app.adapters.ports import FeederCommunicationPort, SecretsStorePort
 
 
 class Settings(object):
     feeder_communication: FeederCommunicationPort = None
+    secret_store: SecretsStorePort = None
 
 
 class GoogleSettings(Settings):
     feeder_communication = GooglePubSubAdapter
+    secret_store = GoogleSecretManager
 
 
 class DefaultSettings(Settings):
     feeder_communication = GooglePubSubAdapter
+    secret_store = GoogleSecretManager
 
 
 def get_settings() -> Settings:
