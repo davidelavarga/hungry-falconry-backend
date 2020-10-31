@@ -10,6 +10,7 @@ from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerial
 
 from hexagonal_settings import get_settings
 
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -63,15 +64,16 @@ class ScheduleList(ListCreateAPIView):
         :return: Scheduled created
         """
         try:
+            # Get MAC
             # Create schedule object and save it in database
             schedule = self.create(request, *args, **kwargs)
             # Once the schedule is created, send it to feeder device
-            get_settings().feeder_communication().publish_schedule_request(schedule.data, self.request.user.auth_token.key)
+            get_settings().feeder_communication().publish_schedule_request(schedule.data,
+                                                                           self.request.user.auth_token.key)
             return schedule
         except Exception as e:
-            #TODO: Removed schedule when something fails
+            # TODO: Removed schedule when something fails
             print(f"Should remove schedule: {e}")
-
 
 
 class ScheduleDetail(RetrieveUpdateDestroyAPIView):

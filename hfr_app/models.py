@@ -46,22 +46,30 @@ class MACAddressField(models.Field):
         return super(MACAddressField, self).formfield(**defaults)
 
 
-class Feeder(models.Model):
+class Hub(models.Model):
     mac_address = MACAddressField(unique=True, null=False, blank=False)
-    name_by_user = models.CharField(max_length=20, null=False, blank=False, unique=False, default="Feeder")
-    max_portions = models.IntegerField(null=False, blank=False, editable=True, auto_created=True)
-    current_portions = models.IntegerField(null=False, blank=True, editable=True, auto_created=True, default=0)
-    created_at = models.DateTimeField(auto_now=timezone.now)
-    owner = models.ForeignKey("auth.User", related_name='feeders', on_delete=models.CASCADE, null=False, blank=False)
+    version = models.CharField(max_length=10, null=True, blank=True, unique=False, default="Default version")
+    owner = models.ForeignKey("auth.User", related_name='hubs', on_delete=models.CASCADE, null=False, blank=False)
 
     def __str__(self):
         return self.mac_address
 
 
+class Feeder(models.Model):
+    name_by_user = models.CharField(max_length=30, null=False, blank=False, unique=False, default="Feeder")
+    max_portions = models.IntegerField(null=False, blank=False, editable=True, auto_created=True)
+    current_portions = models.IntegerField(null=False, blank=True, editable=True, auto_created=True, default=0)
+    created_at = models.DateTimeField(auto_now=timezone.now)
+    hub = models.ForeignKey('Hub', related_name='feeders', on_delete=models.CASCADE, null=False, blank=False)
+
+    def __str__(self):
+        return self.name_by_user
+
+
 class Schedule(models.Model):
     timestamp = models.DateTimeField(null=False, blank=False)
-    feeder = models.ForeignKey('Feeder', related_name='schedules', on_delete=models.CASCADE, null=False, blank=False)
     done = models.BooleanField(default=False)
+    feeder = models.ForeignKey('Feeder', related_name='schedules', on_delete=models.CASCADE, null=False, blank=False)
 
     def __str__(self):
         return str(self.timestamp)
