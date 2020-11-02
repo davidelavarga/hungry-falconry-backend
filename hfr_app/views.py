@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, CreateAPIView
 
-from hfr_app.models import Feeder, Schedule
+from hfr_app.models import Feeder, Schedule, Hub
 from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer
 
 from hexagonal_settings import get_settings
@@ -65,11 +65,13 @@ class ScheduleList(ListCreateAPIView):
         """
         try:
             # Get MAC
+            feeder_id = self.kwargs['pk']
+            hub_mac_address = Feeder.objects.get(id=feeder_id).hub.mac_address
             # Create schedule object and save it in database
             schedule = self.create(request, *args, **kwargs)
             # Once the schedule is created, send it to feeder device
             get_settings().feeder_communication().publish_schedule_request(schedule.data,
-                                                                           self.request.user.auth_token.key)
+                                                                           hub_mac_address, feeder_id)
             return schedule
         except Exception as e:
             # TODO: Removed schedule when something fails
