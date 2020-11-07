@@ -3,10 +3,10 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, CreateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView
 
 from hfr_app.models import Feeder, Schedule, Hub
-from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer
+from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer, HubSerializer, AllHubDataSerializer
 
 from hexagonal_settings import get_settings
 
@@ -28,23 +28,41 @@ class HelloView(APIView):
         return Response(content)
 
 
+class HubList(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = HubSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Hub.objects.all()
+        return Hub.objects.filter(owner=self.request.user)
+
+
+class HubDetail(RetrieveUpdateDestroyAPIView):
+    serializer_class = HubSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Hub.objects.all()
+        return Hub.objects.filter(owner=self.request.user)
+
+
 class FeederList(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FeederSerializer
 
     def get_queryset(self):
-        if self.request.user.is_superuser:
-            return Feeder.objects.all()
-        return Feeder.objects.filter(owner=self.request.user)
+        hub = self.kwargs['pk']
+        return Feeder.objects.filter(hub=hub)
 
 
 class FeederDetail(RetrieveUpdateDestroyAPIView):
     serializer_class = FeederSerializer
+    lookup_field = 'id'
 
     def get_queryset(self):
-        if self.request.user.is_superuser:
-            return Feeder.objects.all()
-        return Feeder.objects.filter(owner=self.request.user)
+        hub = self.kwargs['pk']
+        return Feeder.objects.filter(hub=hub)
 
 
 class ScheduleList(ListCreateAPIView):
@@ -84,7 +102,14 @@ class ScheduleDetail(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
     def get_queryset(self):
-        """
-        """
         feeder = self.kwargs['pk']
         return Schedule.objects.filter(feeder=feeder)
+
+
+class HubData(ListAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = AllHubDataSerializer
+
+    def get_queryset(self):
+        hub = self.kwargs['pk']
+        return Hub.objects.filter(id=hub)

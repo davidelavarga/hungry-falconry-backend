@@ -30,8 +30,11 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('hello/', views.HelloView.as_view(), name='hello'),
     url(r'^api-token-auth/', rest_views.obtain_auth_token),
-    path('feeders/', views.FeederList.as_view()),
-    path('feeders/<int:pk>/', views.FeederDetail.as_view()),
+    path('hubs/', views.HubList.as_view()),
+    path('hubs/<int:pk>/', views.HubDetail.as_view()),
+    path('hubs/<int:pk>/feeders/', views.FeederList.as_view()),
+    path('hubs/<int:pk>/feeders/<int:id>/', views.FeederDetail.as_view()),
     path('feeders/<int:pk>/schedules/', views.ScheduleList.as_view()),
     path('feeders/<int:pk>/schedules/<int:id>/', views.ScheduleDetail.as_view()),
+    path('hub-data/<int:pk>/', views.HubData.as_view()),
 ]
