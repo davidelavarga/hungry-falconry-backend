@@ -84,12 +84,12 @@ class ScheduleList(ListCreateAPIView):
         try:
             # Get MAC
             feeder_id = self.kwargs['pk']
-            hub_mac_address = Feeder.objects.get(id=feeder_id).hub.mac_address
+            hub = Feeder.objects.get(id=feeder_id).hub
             # Create schedule object and save it in database
             schedule = self.create(request, *args, **kwargs)
             # Once the schedule is created, send it to feeder device
             get_settings().feeder_communication().publish_schedule_request(schedule.data,
-                                                                           hub_mac_address, feeder_id)
+                                                                           hub.mac_address, feeder_id)
             return schedule
         except Exception as e:
             # TODO: Removed schedule when something fails

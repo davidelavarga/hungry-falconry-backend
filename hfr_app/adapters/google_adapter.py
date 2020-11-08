@@ -17,7 +17,7 @@ class GooglePubSubAdapter(FeederCommunicationPort):
 
     def publish_schedule_request(self, data: dict, hub_mac_address: str, feeder_id: int):
         data = json.dumps(data).encode("utf-8")
-        # auth_key will be used in order to difference the subscriber
+        # mac address will be used in order to difference the subscriber
         future = self.publisher.publish(self.topic_path, data, mac=hub_mac_address, feeder_id=str(feeder_id))
         # TODO error handler: https://cloud.google.com/pubsub/docs/publisher#publishing_messages
         return future
