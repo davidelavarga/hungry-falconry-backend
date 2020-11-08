@@ -95,7 +95,7 @@ if os.getenv('GAE_APPLICATION', None):
             'NAME': 'hf_mysql_db',
         }
     }
-else:
+elif os.getenv('ENV') == "test":
     # Running locally so connect to either a local MySQL instance or connect to
     # Cloud SQL via the proxy. To start the proxy via command line:
     #
@@ -112,12 +112,13 @@ else:
             'NAME': 'hf_mysql_db',
         }
     }
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.sqlite3',
-    #         'NAME': 'db.sqlite3',
-    #     }
-    # }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'db.sqlite3',
+        }
+    }
 # [END db_setup]
 
 DATETIME_INPUT_FORMATS = [
