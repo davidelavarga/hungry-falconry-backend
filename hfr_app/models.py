@@ -11,7 +11,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-MAC_RE = r'^([0-9a-fA-F]{2}([:-]?|$)){6}$'
+MAC_RE = r'^([0-9a-f]{2}([-]?|$)){6}$'  # Lowercase colon-separated MAC address
 mac_re = re.compile(MAC_RE)
 
 
