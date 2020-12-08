@@ -1,7 +1,5 @@
 import re
-import uuid
 
-from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.forms import fields
@@ -11,7 +9,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-MAC_RE = r'^([0-9a-f]{2}([-]?|$)){6}$'  # Lowercase colon-separated MAC address
+MAC_RE = r'^([0-9a-f]{2}([-]?|$)){6}$'  # Lowercase dash-separated MAC address
 mac_re = re.compile(MAC_RE)
 
 
@@ -23,7 +21,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 class MACAddressFormField(fields.RegexField):
     default_error_messages = {
-        'invalid': _(u'Enter a valid MAC address.'),
+        'invalid': _(u'Enter a valid MAC address: 00-00-00-00-00-00'),
     }
 
     def __init__(self, *args, **kwargs):
@@ -48,7 +46,7 @@ class MACAddressField(models.Field):
 
 class Hub(models.Model):
     mac_address = MACAddressField(unique=True, null=False, blank=False)
-    version = models.CharField(max_length=10, null=True, blank=True, unique=False, default="Default version")
+    version = models.CharField(max_length=15, null=True, blank=True, unique=False, default="Default version")
     owner = models.ForeignKey("auth.User", related_name='hubs', on_delete=models.CASCADE, null=False, blank=False)
 
     def __str__(self):
