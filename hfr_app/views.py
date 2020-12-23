@@ -111,11 +111,13 @@ class ScheduleDetail(RetrieveUpdateDestroyAPIView):
             # Get MAC
             hub_id = self.kwargs["pk"]
             feeder_id = self.kwargs['pk2']
+            schedule_id = self.kwargs['id']
             hub = Feeder.objects.get(id=feeder_id, hub=hub_id).hub
+            # Send to remove it in the hub
+            get_settings().feeder_communication().publish_schedule_request({"id": schedule_id}, "remove",
+                                                                           hub.mac_address, feeder_id)
+            # Finally remove it from the DB
             schedule = self.destroy(request, *args, **kwargs)
-            # Once the schedule is created, send it to feeder device
-            get_settings().feeder_communication().publish_schedule_request(schedule.data, "remove", hub.mac_address,
-                                                                           feeder_id)
             return schedule
         except Exception as e:
             # TODO: Removed schedule when something fails
