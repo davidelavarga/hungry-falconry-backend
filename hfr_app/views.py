@@ -1,14 +1,14 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView
-
-from hfr_app.models import Feeder, Schedule, Hub
-from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer, HubSerializer, AllHubDataSerializer
 
 from hexagonal_settings import get_settings
+from hfr_app.models import Feeder, Schedule, Hub
+from hfr_app.serializers import UserSerializer, FeederSerializer, ScheduleSerializer, HubSerializer, \
+    AllHubDataSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -88,8 +88,8 @@ class ScheduleList(ListCreateAPIView):
             # Create schedule object and save it in database
             schedule = self.create(request, *args, **kwargs)
             # Once the schedule is created, send it to feeder device
-            get_settings().feeder_communication().publish_schedule_request(schedule.data,
-                                                                           hub.mac_address, feeder_id)
+            get_settings().feeder_communication().publish_schedule_request(schedule.data, "add", hub.mac_address,
+                                                                           feeder_id)
             return schedule
         except Exception as e:
             # TODO: Removed schedule when something fails
@@ -104,6 +104,20 @@ class ScheduleDetail(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         feeder = self.kwargs['pk']
         return Schedule.objects.filter(feeder=feeder)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            # Get MAC
+            feeder_id = self.kwargs['pk']
+            hub = Feeder.objects.get(id=feeder_id).hub
+            schedule = self.destroy(request, *args, **kwargs)
+            # Once the schedule is created, send it to feeder device
+            get_settings().feeder_communication().publish_schedule_request(schedule.data, "remove", hub.mac_address,
+                                                                           feeder_id)
+            return schedule
+        except Exception as e:
+            # TODO: Removed schedule when something fails
+            print(f"Cannot remove schedule: {e}")
 
 
 class HubData(ListAPIView):
