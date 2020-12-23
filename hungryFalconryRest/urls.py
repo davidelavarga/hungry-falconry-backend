@@ -34,7 +34,7 @@ urlpatterns = [
     path('hubs/<int:pk>/', views.HubDetail.as_view()),
     path('hubs/<int:pk>/feeders/', views.FeederList.as_view()),
     path('hubs/<int:pk>/feeders/<int:id>/', views.FeederDetail.as_view()),
-    path('feeders/<int:pk>/schedules/', views.ScheduleList.as_view()),
-    path('feeders/<int:pk>/schedules/<int:id>/', views.ScheduleDetail.as_view()),
+    path('hubs/<int:pk>/feeders/<int:pk2>/schedules/', views.ScheduleList.as_view()),
+    path('hubs/<int:pk>/feeders/<int:pk2>/schedules/<int:id>/', views.ScheduleDetail.as_view()),
     path('hub-data/<int:pk>/', views.HubData.as_view()),
 ]

@@ -73,7 +73,7 @@ class ScheduleList(ListCreateAPIView):
         """
         Return a list of schedules based on feeder id
         """
-        feeder = self.kwargs['pk']
+        feeder = self.kwargs['pk2']
         return Schedule.objects.filter(feeder=feeder)
 
     def post(self, request, *args, **kwargs):
@@ -83,8 +83,9 @@ class ScheduleList(ListCreateAPIView):
         """
         try:
             # Get MAC
-            feeder_id = self.kwargs['pk']
-            hub = Feeder.objects.get(id=feeder_id).hub
+            hub_id = self.kwargs["pk"]
+            feeder_id = self.kwargs['pk2']
+            hub = Feeder.objects.get(id=feeder_id, hub=hub_id).hub
             # Create schedule object and save it in database
             schedule = self.create(request, *args, **kwargs)
             # Once the schedule is created, send it to feeder device
@@ -102,14 +103,15 @@ class ScheduleDetail(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
     def get_queryset(self):
-        feeder = self.kwargs['pk']
+        feeder = self.kwargs['pk2']
         return Schedule.objects.filter(feeder=feeder)
 
     def delete(self, request, *args, **kwargs):
         try:
             # Get MAC
-            feeder_id = self.kwargs['pk']
-            hub = Feeder.objects.get(id=feeder_id).hub
+            hub_id = self.kwargs["pk"]
+            feeder_id = self.kwargs['pk2']
+            hub = Feeder.objects.get(id=feeder_id, hub=hub_id).hub
             schedule = self.destroy(request, *args, **kwargs)
             # Once the schedule is created, send it to feeder device
             get_settings().feeder_communication().publish_schedule_request(schedule.data, "remove", hub.mac_address,
