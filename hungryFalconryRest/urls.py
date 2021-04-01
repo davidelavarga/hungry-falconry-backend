@@ -26,7 +26,7 @@ router.register(r'users', views.UserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('/api', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('hello/', views.HelloView.as_view(), name='hello'),
     url(r'^api-token-auth/', rest_views.obtain_auth_token),
@@ -37,4 +37,5 @@ urlpatterns = [
     path('hubs/<int:pk>/feeders/<int:pk2>/schedules/', views.ScheduleList.as_view()),
     path('hubs/<int:pk>/feeders/<int:pk2>/schedules/<int:id>/', views.ScheduleDetail.as_view()),
     path('hub-data/<int:pk>/', views.HubData.as_view()),
+    path('info/', include('hf_public.urls'))
 ]
